@@ -1,0 +1,10 @@
+:Rg	ripgrep.txt	/*:Rg*
+:Ripgrep	ripgrep.txt	/*:Ripgrep*
+g:ripgrep#executable	ripgrep.txt	/*g:ripgrep#executable*
+ripgrep	ripgrep.txt	/*ripgrep*
+ripgrep#observe#add_observer()	ripgrep.txt	/*ripgrep#observe#add_observer()*
+ripgrep-command	ripgrep.txt	/*ripgrep-command*
+ripgrep-contents	ripgrep.txt	/*ripgrep-contents*
+ripgrep-custom	ripgrep.txt	/*ripgrep-custom*
+ripgrep-usage	ripgrep.txt	/*ripgrep-usage*
+ripgrep.txt	ripgrep.txt	/*ripgrep.txt*

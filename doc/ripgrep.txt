@@ -65,5 +65,5 @@ ripgrep#observe#add_observer({name}, {func})
 *:Rg*
     If you want to call |:Ripgrep| as `:Rg`, you can set an abbreviation.
 >
-    :cabbrev /^Rg/ Ripgrep
+    :ca <expr> Rg (getcmdtype()==#":" && getcmdline()==#"Rg")?"Ripgrep":"Rg"
 <
