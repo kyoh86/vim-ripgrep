@@ -3,8 +3,10 @@
 g:ripgrep#executable	ripgrep.txt	/*g:ripgrep#executable*
 ripgrep	ripgrep.txt	/*ripgrep*
 ripgrep#observe#add_observer()	ripgrep.txt	/*ripgrep#observe#add_observer()*
+ripgrep#search()	ripgrep.txt	/*ripgrep#search()*
 ripgrep-command	ripgrep.txt	/*ripgrep-command*
 ripgrep-contents	ripgrep.txt	/*ripgrep-contents*
-ripgrep-custom	ripgrep.txt	/*ripgrep-custom*
+ripgrep-function	ripgrep.txt	/*ripgrep-function*
 ripgrep-usage	ripgrep.txt	/*ripgrep-usage*
+ripgrep-variable	ripgrep.txt	/*ripgrep-variable*
 ripgrep.txt	ripgrep.txt	/*ripgrep.txt*

@@ -25,11 +25,9 @@ let s:jobid = 0
 function! s:reset()
     " Reset (initialize) job status and quickfix-list
     let s:found = v:false
-    if s:jobid > 0
-        silent call ripgrep#job#stop(s:jobid)
-        let s:jobid = 0
-    endif
+    call ripgrep#stop()
     call setqflist([], 'r')
+    call ripgrep#observe#add_observer('match', 'ripgrep#__register_match')
 endfunction
 
 function! s:finish()
@@ -38,20 +36,28 @@ function! s:finish()
         call setqflist([], 'a', {'title': 'Ripgrep'})
         let s:jobid = 0
     end
+    call ripgrep#observe#notify('finish')
+endfunction
+
+function! ripgrep#__register_match(item)
+    if !s:found
+        copen
+    endif
+    let s:found = v:true
+    call setqflist([a:item], 'a')
 endfunction
 
 function! s:stdout_handler(job_id, data, event_type)
     " Receive lines from rg --json
     for l:line in a:data
-        let l:item = ripgrep#parse#jsonl(l:line)
-        if type(l:item) != v:t_dict
-            continue
-        endif
-        if !s:found
-            copen
-        endif
-        let s:found = v:true
-        call setqflist([l:item], 'a')
+        call ripgrep#parse#jsonl_suspected(l:line, v:false)
+    endfor
+endfunction
+
+function! s:stderr_handler(job_id, data, event_type)
+    " Receive standard-error lines from rg --json
+    for l:line in a:data
+        call ripgrep#parse#jsonl_suspected(l:line, v:true)
     endfor
 endfunction
 
@@ -69,9 +75,9 @@ function! ripgrep#search(arg) abort
     call extend(l:cmds, s:get_base_options())
     call add(l:cmds, a:arg)
     call s:reset()
-    echomsg join(l:cmds, " ")
     let s:jobid = ripgrep#job#start(join(l:cmds, " "), {
         \ 'on_stdout': function('s:stdout_handler'),
+        \ 'on_stderr': function('s:stderr_handler'),
         \ 'on_exit': function('s:exit_handler'),
         \ 'normalize': 'array',
         \ 'nvim': {
@@ -87,3 +93,12 @@ function! ripgrep#search(arg) abort
         echoerr 'failed to be call ripgrep'
     endif
 endfunction
+
+function! ripgrep#stop() abort
+    if s:jobid <= 0
+        return
+    endif
+    silent call ripgrep#job#stop(s:jobid)
+    let s:jobid = 0
+endfunction
+

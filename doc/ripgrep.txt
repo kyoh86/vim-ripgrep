@@ -7,49 +7,79 @@ License: MIT license
 CONTENTS                                               *ripgrep-contents*
 
 USAGE                                                  |ripgrep-usage|
+  FUNCTIONS                                            |ripgrep-function|
   COMMANDS                                             |ripgrep-command|
-  CUSTOM                                               |ripgrep-custom|
+  VARIABLES                                            |ripgrep-variable|
 
 ===============================================================================
 USAGE                                                  *ripgrep-usage*
 
-*ripgrep* provides a command ":Ripgrep" to search text by ripgrep (`rg`) and
-show results in quickfix.
->
-    Ripgrep foobar
-<
+*ripgrep* provides functions to search text by ripgrep(`rg`), to watch result,
+and set results in quickfix.
 
 -------------------------------------------------------------------------------
-COMMANDS                                               *ripgrep-command*
+FUNCTIONS                                              *ripgrep-function*
 
-                                                       *:Ripgrep*
-:Ripgrep {keyword} [{opts}...]
+                                                        *ripgrep#search()*
+ripgrep#search({arg})
+
     Search keyword from current working directory by ripgrep (`rg`) command.
-    {opts} also may be pass for the ripgrep:
-    e.g. `-w` (Only show matches surrounded by word boundaries)
-    See `rg --help` for more details.
+    {arg} is |String| may be pass for the ripgrep like below:
+>
+    call ripgrep#search('-w --igore-case foo')
+<
+    See `$ rg --help` for more details.
 
-
--------------------------------------------------------------------------------
-CUSTOM                                                 *ripgrep-custom*
-
-*g:ripgrep#executable*
-    Set a path |String| to executable "ripgrep" command.
-    Default: v:null
 
                                         *ripgrep#observe#add_observer()*
 ripgrep#observe#add_observer({name}, {func})
-    You can set an observer to receive events.
-    There are two event name, "begin" and "match".
+    Add an observer to receive some events.
 
+    Events:
+        - `begin`
+          Indicate that "begin" entry is found from ripgrep.
+          Parameter is a path |String| searching.
+
+        - `match`
+          Indicate that "match" entry is found from ripgrep.
+          Parameter is an |Dictionary| contains matched profile like below.
+>
+            {
+                \ 'filename': '', " path |String|
+                \ 'lnum': 1,      " line |Number|
+                \ 'col': 1,       " column |Number|
+                \ 'end_col': 1,   " end-col |Number|
+                \ 'text': '',     " content |String|
+            \ }
+<
+        - `other`
+          Indicate that an other entry is found from ripgrep.
+          Parameter is a |Dictionary| parsed from the json-line.
+
+        - `error`
+          Indicate that a json-line is found in std-error from ripgrep.
+          Parameter is a |Dictionary| parsed from the json-line.
+
+        - `rawline`
+          Indicate that a raw-line not unparsable from ripgrep.
+          Parameter is a raw-line |String|.
+
+        - `errline`
+          Indicate that a raw-line not unparsable in std-error from ripgrep.
+          Parameter is a raw-line |String|.
+
+        - `finish`
+          Indicate that ripgrep stopped. Parameter is none.
+
+    Usage example:
 >
     function! ReceiveRipgrepBegin(filename)
         echo a:filename
     endfunction
+    call ripgrep#observer#add_observer("begin", "ReceiveRipgrepBegin")
+<
 
-    call ripgrep#observer#add_observer( \
-        "begin", function("ReceiveRipgrepBegin"))
-
+>
     function! ReceiveRipgrepMatch(item)
         echo a:item['filename']
         echo a:item['lnum']
@@ -57,13 +87,35 @@ ripgrep#observe#add_observer({name}, {func})
         echo a:item['end_col']
         echo a:item['text']
     endfunction
-
-    call ripgrep#observer#add_observer( \
-        "match", function("ReceiveRipgrepMatch"))
+    call ripgrep#observer#add_observer("match", "ReceiveRipgrepMatch")
 <
 
-*:Rg*
-    If you want to call |:Ripgrep| as `:Rg`, you can set an abbreviation.
+
+-------------------------------------------------------------------------------
+COMMANDS                                               *ripgrep-command*
+
+THIS PLUGIN NEVER DEFINES ANY COMMANDS.
+If you want call any functions from command, you can define them like below.
+
+                                                       *:Ripgrep* *:Rg*
+:Ripgrep {keyword} [{opts}...]
+
+    Setting:
+    >
+        command! -nargs=* -complete=file Ripgrep :call ripgrep#search(<q-args>)
+<
+
+    Search keyword from current working directory by ripgrep (`rg`) command.
+    {opts} also may be pass for the ripgrep like below:
 >
-    :ca <expr> Rg (getcmdtype()==#":" && getcmdline()==#"Rg")?"Ripgrep":"Rg"
+    :Ripgrep -w --ignore-case foo
 <
+    See `$ rg --help` for more details.
+
+
+-------------------------------------------------------------------------------
+VARIABLE                                               *ripgrep-variable*
+
+*g:ripgrep#executable*
+    Set a path |String| to executable "ripgrep" command.
+    Default: v:null

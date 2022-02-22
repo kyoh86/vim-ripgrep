@@ -2,7 +2,27 @@
 
 **This is ALPHA version plugin.**
 
-A plugin to search text by `ripgrep` (`rg`).
+A plugin for vim8/neovim to search text by `ripgrep` (`rg`).
+
+# USAGE
+
+For more details: `:help ripgrep.txt`
+
+## FUNCTION
+
+```vim
+:call ripgrep#search('-w --ignore-case foo')
+```
+
+## CONFIG
+
+You can create a command to call the function with a name you like.
+For example:
+
+```vim
+Plug "kyoh86/vim-ripgrep",
+command! -nargs=* -complete=file Ripgrep :call ripgrep#search(<q-args>)
+```
 
 # LICENSE
 
