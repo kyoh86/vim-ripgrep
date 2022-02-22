@@ -1,0 +1,69 @@
+*ripgrep.txt*                           A plugin to search text by ripgrep
+
+Author: kyoh86 <me@kyoh86.dev>
+License: MIT license
+
+===============================================================================
+CONTENTS                                               *ripgrep-contents*
+
+USAGE                                                  |ripgrep-usage|
+  COMMANDS                                             |ripgrep-command|
+  CUSTOM                                               |ripgrep-custom|
+
+===============================================================================
+USAGE                                                  *ripgrep-usage*
+
+*ripgrep* provides a command ":Ripgrep" to search text by ripgrep (`rg`) and
+show results in quickfix.
+>
+    Ripgrep foobar
+<
+
+-------------------------------------------------------------------------------
+COMMANDS                                               *ripgrep-command*
+
+                                                       *:Ripgrep*
+:Ripgrep {keyword} [{opts}...]
+    Search keyword from current working directory by ripgrep (`rg`) command.
+    {opts} also may be pass for the ripgrep:
+    e.g. `-w` (Only show matches surrounded by word boundaries)
+    See `rg --help` for more details.
+
+
+-------------------------------------------------------------------------------
+CUSTOM                                                 *ripgrep-custom*
+
+*g:ripgrep#executable*
+    Set a path |String| to executable "ripgrep" command.
+    Default: v:null
+
+                                        *ripgrep#observe#add_observer()*
+ripgrep#observe#add_observer({name}, {func})
+    You can set an observer to receive events.
+    There are two event name, "begin" and "match".
+
+>
+    function! ReceiveRipgrepBegin(filename)
+        echo a:filename
+    endfunction
+
+    call ripgrep#observer#add_observer( \
+        "begin", function("ReceiveRipgrepBegin"))
+
+    function! ReceiveRipgrepMatch(item)
+        echo a:item['filename']
+        echo a:item['lnum']
+        echo a:item['col']
+        echo a:item['end_col']
+        echo a:item['text']
+    endfunction
+
+    call ripgrep#observer#add_observer( \
+        "match", function("ReceiveRipgrepMatch"))
+<
+
+*:Rg*
+    If you want to call |:Ripgrep| as `:Rg`, you can set an abbreviation.
+>
+    :cabbrev /^Rg/ Ripgrep
+<
