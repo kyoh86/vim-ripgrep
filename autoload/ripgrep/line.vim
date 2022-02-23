@@ -56,7 +56,8 @@ function! s:process_match(rel, line_object) abort
     let l:linetext = l:match['lines']['text']
     let l:lnum = l:match['line_number']
     let l:submatches = l:match['submatches']
-    let l:start = l:submatches[0]['start']
+    " The start is based 0.
+    let l:start = l:submatches[0]['start'] + 1
     let l:end = l:submatches[0]['end']
     call ripgrep#observe#notify('match', {
         \ 'filename': ripgrep#path#rel(a:rel . l:filename),
