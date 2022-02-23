@@ -12,7 +12,7 @@ function! ripgrep#path#traverse_root(path, marks) abort
 endfunction
 
 function! s:traverse(path, rel, marks) abort
-    if a:path == ''
+    if a:path ==# ''
         return [a:path, a:rel]
     endif
     for l:m in a:marks
