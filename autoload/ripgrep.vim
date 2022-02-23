@@ -114,5 +114,8 @@ function! ripgrep#wait() abort
     if s:jobid <= 0
         return
     endif
-    silent call ripgrep#job#wait([s:jobid])
+    try
+        call ripgrep#job#wait([s:jobid])
+    catch
+    endtry
 endfunction
