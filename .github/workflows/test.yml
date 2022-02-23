@@ -51,6 +51,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Setup cargo
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: install ripgrep
+        run: cargo install ripgrep
       - name: Checkout vim-themis
         uses: actions/checkout@v2
         with:
