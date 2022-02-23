@@ -70,7 +70,7 @@ jobs:
       - name: Run unit tests
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
-        run: ./vim-themis/bin/themis.bat ./test
+        run: ./vim-themis/bin/themis ./test
 
   vint:
     name: Run vint
