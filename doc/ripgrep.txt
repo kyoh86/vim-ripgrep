@@ -37,13 +37,14 @@ ripgrep#observe#add_observer({name}, {func})
     All events send a message to {func} with a |Dictionary| parameter.
 
     Events:
-      - `begin`
-        Indicate that "begin" entry is found from ripgrep.
+      - `g:ripgrep#event#file_begin`
+        Indicate that ripgrep begins searching in a file.
         Parameter:
           - `filename`: a path |String| searching.
 
-      - `match`
-        Indicate that "match" entry is found from ripgrep.
+      - `g:ripgrep#event#match`
+
+        Indicate that ripgrep find a line matching the keyword.
         Parameter:
           - `filename`: a path |String| matched.
           - `lnum`:     a line |Number| matched.
@@ -51,34 +52,40 @@ ripgrep#observe#add_observer({name}, {func})
           - `end_col`:  an end-column |Number| matched.
           - `text`:     a content |String| matched.
 
-      - `other`
-        Indicate that an other entry is found from ripgrep.
+      - `g:ripgrep#event#file_end`
+        Indicate that ripgrep ended searching in a file.
+        Parameter:
+          - `filename`: a path |String| searching.
+          - `stats`: stats |Dictionary| from ripgrep.
+
+      - `g:ripgrep#event#finish`
+        Indicate that ripgrep stopped.
+        Parameter:
+          - `status`: a status code |Number|.
+
+      - `g:ripgrep#event#other`
+        Indicate that an other json-entry is reported from ripgrep.
         Parameter is a |Dictionary| parsed from the json-line.
 
-      - `error`
-        Indicate that a json-line is found in std-error from ripgrep.
-        Parameter is a |Dictionary| parsed from the json-line.
-
-      - `raw`
-        Indicate that a raw-line not unparsable from ripgrep.
+      - `g:ripgrep#event#error`
+        Indicate that ripgrep puts a line into standard-error.
         Parameter:
-          - `text`:     a raw-line |String|.
+          - `raw`: a raw line |String|.
 
-      - `rawerror`
-        Indicate that a raw-line not unparsable in std-error from ripgrep.
+      - `g:ripgrep#event#raw`
+        Indicate that ripgrep puts a line being not formed as json.
         Parameter:
-          - `text`:     a raw-line |String|.
+          - `raw`: a raw line |String|.
 
-      - `finish`
-        Indicate that ripgrep stopped. Parameter is none.
-        Parameter is an empty |Dictionary|.
-
-    Usage example:
+    Usage examples:
 >
     function! ReceiveRipgrepBegin(params)
         echo a:params['filename']
     endfunction
-    call ripgrep#observer#add_observer("begin", "ReceiveRipgrepBegin")
+    call ripgrep#observer#add_observer(
+        \ ripgrep#event#file_begin,
+        \ "ReceiveRipgrepBegin"
+    \ )
 <
 
 >
@@ -89,7 +96,10 @@ ripgrep#observe#add_observer({name}, {func})
         echo a:params['end_col']
         echo a:params['text']
     endfunction
-    call ripgrep#observer#add_observer("match", "ReceiveRipgrepMatch")
+    call ripgrep#observer#add_observer(
+        \ ripgrep#event#match,
+        \ "ReceiveRipgrepMatch"
+    \ )
 <
 
 
@@ -121,3 +131,5 @@ VARIABLE                                               *ripgrep-variable*
 *g:ripgrep#executable*
     Set a path |String| to executable "ripgrep" command.
     Default: v:null
+
+vim:filetype=help

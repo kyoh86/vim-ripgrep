@@ -1,0 +1,7 @@
+let g:ripgrep#event#raw = 'raw'
+let g:ripgrep#event#error = 'error'
+let g:ripgrep#event#other = 'other'
+let g:ripgrep#event#match = 'match'
+let g:ripgrep#event#file_begin = 'file_begin'
+let g:ripgrep#event#file_end = 'file_end'
+let g:ripgrep#event#finish = 'finish'

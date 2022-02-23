@@ -41,16 +41,7 @@ function! s:reset() abort
     let s:found = v:false
     call ripgrep#stop()
     call setqflist([], 'r')
-    call ripgrep#observe#add_observer('match', 'ripgrep#__register_match')
-endfunction
-
-function! s:finish() abort
-    " Finish quickfix-list
-    if s:found
-        call setqflist([], 'a', {'title': 'Ripgrep'})
-        let s:jobid = 0
-    end
-    call ripgrep#observe#notify('finish', {})
+    call ripgrep#observe#add_observer(g:ripgrep#event#match, 'ripgrep#__register_match')
 endfunction
 
 function! ripgrep#__register_match(item) abort
@@ -61,25 +52,39 @@ function! ripgrep#__register_match(item) abort
     call setqflist([a:item], 'a')
 endfunction
 
+function! s:finish(status) abort
+    " Finish quickfix-list
+    if s:found
+        call setqflist([], 'a', {'title': 'Ripgrep'})
+        let s:jobid = 0
+    end
+    call ripgrep#observe#notify(g:ripgrep#event#finish, {'status': a:status})
+endfunction
+
 function! s:stdout_handler(job_id, data, event_type) abort
     " Receive lines from rg --json
     for l:line in a:data
-        call ripgrep#line#parse(s:cwd[1], l:line, v:false)
+        let l:handler = ripgrep#line#parse(l:line)
+        let l:event = l:handler[0]
+        let l:body = l:handler[1]
+        if has_key(l:body, 'filename')
+            let l:body['filename'] = ripgrep#path#rel(s:cwd[1] . l:body['filename'])
+        endif
+        call ripgrep#observe#notify(l:event, l:body)
     endfor
 endfunction
 
 function! s:stderr_handler(job_id, data, event_type) abort
     " Receive standard-error lines from rg --json
     for l:line in a:data
-        call ripgrep#line#parse(s:cwd[1], l:line, v:true)
+        call ripgrep#observe#notify(g:ripgrep#event#error, {'raw': l:line})
     endfor
 endfunction
 
 function! s:exit_handler(job_id, data, event_type) abort
     let l:status = a:data
-    if l:status == 0
-        call s:finish()
-    else
+    call s:finish(l:status)
+    if l:status != 0
         echomsg 'failed to find'
     endif
 endfunction
@@ -127,11 +132,8 @@ function! ripgrep#wait(...) abort
         return
     endif
     try
-        if len(a:000) > 0
-            call ripgrep#job#wait([s:jobid])
-        else
-            call ripgrep#job#wait([s:jobid], a:0)
-        endif
+        let l:timeout = get(a:000, 0, -1)
+        call ripgrep#job#wait([s:jobid], l:timeout)
     catch
     endtry
 endfunction
