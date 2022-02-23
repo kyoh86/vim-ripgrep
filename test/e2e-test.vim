@@ -38,7 +38,7 @@ endfunction
 
 function s:suite.parallelly()
     let g:ripgrep#executable =
-                \ 'bash -c "sleep 1 && cat ' . s:tempname . '/cat1.txt && sleep 1 && cat ' . s:tempname . '/cat2.txt'
+                \ 'unbuffer bash -c "sleep 1 && cat ' . s:tempname . '/cat1.txt && sleep 1 && cat ' . s:tempname . '/cat2.txt'
     call setqflist([], 'r')
     call ripgrep#search('pseudo')
     call ripgrep#wait(1500)
