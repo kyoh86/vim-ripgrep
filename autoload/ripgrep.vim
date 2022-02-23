@@ -3,7 +3,11 @@ function! s:get_executable()
     if exists('g:ripgrep#executable')
         return g:ripgrep#executable
     endif
-    return 'rg'
+    if has('win32')
+        return 'rg.exe'
+    else
+        return 'rg'
+    endif
 endfunction
 
 function! s:get_base_options()
@@ -71,7 +75,11 @@ function! s:exit_handler(job_id, data, event_type)
 endfunction
 
 function! ripgrep#search(arg) abort
-    let l:cmds = [s:get_executable()]
+    let l:exe = s:get_executable()
+    if !executable(l:exe)
+        echoerr "There's no executable: " .. l:exe
+    endif
+    let l:cmds = [l:exe]
     call extend(l:cmds, s:get_base_options())
     call add(l:cmds, a:arg)
     call s:reset()
