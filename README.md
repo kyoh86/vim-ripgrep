@@ -29,3 +29,5 @@ command! -nargs=* -complete=file Ripgrep :call ripgrep#search(<q-args>)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg)](http://www.opensource.org/licenses/MIT)
 
 This software is released under the [MIT License](http://www.opensource.org/licenses/MIT), see LICENSE.
+
+- `autoload/ripgrep/job.vim` is from [async.vim](https://github.com/prabirshrestha/async.vim) and some patch.
