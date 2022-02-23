@@ -70,7 +70,7 @@ function! s:exit_handler(job_id, data, event_type) abort
     if l:status == 0
         call s:finish()
     else
-        echomsg "failed to find"
+        echomsg 'failed to find'
     endif
 endfunction
 
@@ -83,7 +83,7 @@ function! ripgrep#search(arg) abort
     call extend(l:cmds, s:get_base_options())
     call add(l:cmds, a:arg)
     call s:reset()
-    let s:jobid = ripgrep#job#start(join(l:cmds, " "), {
+    let s:jobid = ripgrep#job#start(join(l:cmds, ' '), {
         \ 'on_stdout': function('s:stdout_handler'),
         \ 'on_stderr': function('s:stderr_handler'),
         \ 'on_exit': function('s:exit_handler'),
