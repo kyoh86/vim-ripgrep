@@ -122,12 +122,17 @@ function! ripgrep#stop() abort
     let s:jobid = 0
 endfunction
 
-function! ripgrep#wait() abort
+function! ripgrep#wait(...) abort
+    " ripgrep#wait([{timeout}]) wait current process
     if s:jobid <= 0
         return
     endif
     try
-        call ripgrep#job#wait([s:jobid])
+        if len(a:000) > 0
+            call ripgrep#job#wait([s:jobid])
+        else
+            call ripgrep#job#wait([s:jobid], a:0)
+        endif
     catch
     endtry
 endfunction
