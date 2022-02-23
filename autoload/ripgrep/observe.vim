@@ -1,6 +1,6 @@
 let s:observers = {}
 
-function! ripgrep#observe#add_observer(name, observer)
+function! ripgrep#observe#add_observer(name, observer) abort
     if !has_key(s:observers, a:name)
         let s:observers[a:name] = []
     endif
@@ -10,7 +10,7 @@ function! ripgrep#observe#add_observer(name, observer)
     endif
 endfunction
 
-function! ripgrep#observe#notify(name, ...)
+function! ripgrep#observe#notify(name, ...) abort
     if !has_key(s:observers, a:name)
         return
     endif

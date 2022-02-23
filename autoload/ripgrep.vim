@@ -77,7 +77,7 @@ endfunction
 function! ripgrep#search(arg) abort
     let l:exe = s:get_executable()
     if !executable(l:exe)
-        echoerr "There's no executable: " .. l:exe
+        echoerr "There's no executable: " . l:exe
     endif
     let l:cmds = [l:exe]
     call extend(l:cmds, s:get_base_options())

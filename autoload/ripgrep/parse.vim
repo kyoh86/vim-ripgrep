@@ -40,7 +40,7 @@ function! s:process_begin(line_object) abort
     " Parse match-data from ripgrep to qf-list item.
     let l:begin = a:line_object['data']
     let l:filename = l:begin['path']['text']
-    call ripgrep#observe#notify("file", l:filename)
+    call ripgrep#observe#notify('file', l:filename)
     return v:null
 endfunction
 
@@ -53,7 +53,7 @@ function! s:process_match(line_object) abort
     let l:submatches = l:match['submatches']
     let l:start = l:submatches[0]['start']
     let l:end = l:submatches[0]['end']
-    call ripgrep#observe#notify("match", {
+    call ripgrep#observe#notify('match', {
         \ 'filename': l:filename,
         \ 'lnum': l:lnum,
         \ 'col': l:start,
