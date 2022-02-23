@@ -99,7 +99,7 @@ COMMANDS                                               *ripgrep-command*
 THIS PLUGIN NEVER DEFINES ANY COMMANDS.
 If you want call any functions from command, you can define them like below.
 
-                                                       *:Ripgrep* *:Rg*
+                                                             *:Ripgrep*
 :Ripgrep {keyword} [{opts}...]
 
     Setting:

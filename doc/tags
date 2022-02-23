@@ -1,4 +1,3 @@
-:Rg	ripgrep.txt	/*:Rg*
 :Ripgrep	ripgrep.txt	/*:Ripgrep*
 g:ripgrep#executable	ripgrep.txt	/*g:ripgrep#executable*
 ripgrep	ripgrep.txt	/*ripgrep*
