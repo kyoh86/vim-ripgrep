@@ -4,6 +4,15 @@
 
 A plugin for Vim8/Neovim to search text by `ripgrep` (`rg`).
 
+## What's different from [`jremmen/vim-ripgrep`](https://github.com/jremmen/vim-ripgrep)?
+
+- Calling `ripgrep` asynchronously.
+    - Even if it finds a lot of matches, editor won't freeze.
+- There's no default command.
+    - You can create a command with name what you like.
+- Observability.
+    - You can add observer for each event in searching process.
+
 # USAGE
 
 For more details: `:help ripgrep.txt`
@@ -30,5 +39,5 @@ command! -nargs=* -complete=file Ripgrep :call ripgrep#search(<q-args>)
 
 This software is released under the [MIT License](http://www.opensource.org/licenses/MIT), see LICENSE.
 
-- `autoload/ripgrep/job.vim` is from [async.vim](https://github.com/prabirshrestha/async.vim) and some patch.
+- `autoload/ripgrep/job.vim` is from [`async.vim`](https://github.com/prabirshrestha/async.vim) and some patch.
 
