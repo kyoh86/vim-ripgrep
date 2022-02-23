@@ -8,6 +8,7 @@ A plugin for Vim8/Neovim to search text by `ripgrep` (`rg`).
 
 - Calling `ripgrep` asynchronously.
     - Even if it finds a lot of matches, editor won't freeze.
+    - Exception in case of `Neovim` on `Windows`.
 - There's no default command.
     - You can create a command with name what you like.
 - Observability.

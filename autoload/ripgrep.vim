@@ -98,6 +98,10 @@ function! ripgrep#search(arg) abort
     call extend(l:cmds, s:get_base_options())
     call add(l:cmds, a:arg)
     call s:reset()
+    let l:pty = v:true
+    if has('win32') && has('nvim')
+        let l:pty = v:false
+    endif
     let s:cwd = ripgrep#path#traverse_root(getcwd(), s:get_root_marks())
     let s:jobid = ripgrep#job#start(join(l:cmds, ' '), {
         \ 'on_stdout': function('s:stdout_handler'),
@@ -107,11 +111,11 @@ function! ripgrep#search(arg) abort
         \ 'overlapped': v:true,
         \ 'cwd': s:cwd[0],
         \ 'nvim': {
-            \ 'pty': v:true,
+            \ 'pty': l:pty,
             \ 'stdin': 'null',
         \ },
         \ 'vim': {
-            \ 'pty': v:true,
+            \ 'pty': l:pty,
             \ 'in_io': 'null',
         \ },
     \ })
