@@ -10,6 +10,15 @@ function! s:get_executable() abort
     endif
 endfunction
 
+function! s:get_root_marks() abort
+    " Get rip-grep root directory marks from global variable.
+    " Default: [".git"]
+    if exists('g:ripgrep#root_marks')
+        return g:ripgrep#root_marks
+    endif
+    return ['.git']
+endfunction
+
 function! s:get_base_options() abort
     " Get common command-line options for ripgrep.
     " It uses 'ignorecase' and 'smartcase' vim option.
@@ -24,6 +33,7 @@ function! s:get_base_options() abort
 endfunction
 
 let s:found = v:false
+let s:cwd = ['', ''] " tuple of [path, rel-path]
 let s:jobid = 0
 
 function! s:reset() abort
@@ -54,14 +64,14 @@ endfunction
 function! s:stdout_handler(job_id, data, event_type) abort
     " Receive lines from rg --json
     for l:line in a:data
-        call ripgrep#parse#jsonl_suspected(l:line, v:false)
+        call ripgrep#line#parse(s:cwd[1], l:line, v:false)
     endfor
 endfunction
 
 function! s:stderr_handler(job_id, data, event_type) abort
     " Receive standard-error lines from rg --json
     for l:line in a:data
-        call ripgrep#parse#jsonl_suspected(l:line, v:true)
+        call ripgrep#line#parse(s:cwd[1], l:line, v:true)
     endfor
 endfunction
 
@@ -83,11 +93,13 @@ function! ripgrep#search(arg) abort
     call extend(l:cmds, s:get_base_options())
     call add(l:cmds, a:arg)
     call s:reset()
+    let s:cwd = ripgrep#path#traverse_root(getcwd(), s:get_root_marks())
     let s:jobid = ripgrep#job#start(join(l:cmds, ' '), {
         \ 'on_stdout': function('s:stdout_handler'),
         \ 'on_stderr': function('s:stderr_handler'),
         \ 'on_exit': function('s:exit_handler'),
         \ 'normalize': 'array',
+        \ 'cwd': s:cwd[0],
         \ 'nvim': {
             \ 'pty': v:true,
             \ 'stdin': 'null',

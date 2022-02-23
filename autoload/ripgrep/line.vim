@@ -1,4 +1,8 @@
-function! ripgrep#parse#jsonl_suspected(line, stderr) abort
+" line.vim
+"
+" Functions to process output lines from rg --json
+
+function! ripgrep#line#parse(rel, line, stderr) abort
     " Parse json-line from ripgrep (with --json option) to qf-list item.
     let l:line_object = v:null
     try
@@ -19,9 +23,9 @@ function! ripgrep#parse#jsonl_suspected(line, stderr) abort
     if a:stderr
         return s:process_error(l:line_object)
     elseif l:type ==# 'begin'
-        return s:process_begin(l:line_object)
+        return s:process_begin(a:rel, l:line_object)
     elseif l:type ==# 'match'
-        return s:process_match(l:line_object)
+        return s:process_match(a:rel, l:line_object)
     else
         return s:process_other(l:line_object)
     endif
@@ -37,15 +41,15 @@ function! s:process_other(line_object) abort
     return v:null
 endfunction
 
-function! s:process_begin(line_object) abort
+function! s:process_begin(rel, line_object) abort
     " Parse match-data from ripgrep to qf-list item.
     let l:begin = a:line_object['data']
     let l:filename = l:begin['path']['text']
-    call ripgrep#observe#notify('file', {'filename': l:filename})
+    call ripgrep#observe#notify('file', {'filename': ripgrep#path#rel(a:rel . l:filename)})
     return v:null
 endfunction
 
-function! s:process_match(line_object) abort
+function! s:process_match(rel, line_object) abort
     " Parse match-data from ripgrep to qf-list item.
     let l:match =  a:line_object['data']
     let l:filename = l:match['path']['text']
@@ -55,7 +59,7 @@ function! s:process_match(line_object) abort
     let l:start = l:submatches[0]['start']
     let l:end = l:submatches[0]['end']
     call ripgrep#observe#notify('match', {
-        \ 'filename': l:filename,
+        \ 'filename': ripgrep#path#rel(a:rel . l:filename),
         \ 'lnum': l:lnum,
         \ 'col': l:start,
         \ 'end_col': l:end,
