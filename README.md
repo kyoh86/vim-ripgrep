@@ -1,8 +1,6 @@
 # ripgrep.vim
 
-**This is ALPHA version plugin.**
-
-A plugin for vim8/neovim to search text by `ripgrep` (`rg`).
+A plugin for Vim8/Neovim to search text by `ripgrep` (`rg`).
 
 # USAGE
 
