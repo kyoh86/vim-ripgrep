@@ -45,5 +45,5 @@ function! s:trim_last_separator(path) abort
 endfunction
 
 function! ripgrep#path#rel(path) abort
-    return fnamemodify(a:path, ':.')
+    return fnamemodify(a:path, ':~:.')
 endfunction
