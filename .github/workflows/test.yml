@@ -4,16 +4,13 @@ on: [push, pull_request]
 jobs:
   test:
     name: Unit tests on Ubuntu
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
         neovim: [true, false]
         version: [stable, nightly]
-        # Exclude Neovim nightly since it's unstable
-        # exclude:
-        #   - neovim: true
-        #     version: nightly
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -40,14 +37,15 @@ jobs:
 
   test-windows:
     name: Unit tests on Windows
+    timeout-minutes: 10
     strategy:
       matrix:
         neovim: [true, false]
         version: [stable, nightly]
-        # Exclude Neovim nightly since it's unstable
         exclude:
-          - neovim: true
-            version: nightly
+          # No stable Vim release is officially provided for Windows
+          - neovim: false
+            version: stable
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -74,6 +72,7 @@ jobs:
 
   vint:
     name: Run vint
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
