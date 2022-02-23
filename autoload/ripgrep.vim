@@ -107,9 +107,11 @@ function! ripgrep#search(arg) abort
         \ 'overlapped': v:true,
         \ 'cwd': s:cwd[0],
         \ 'nvim': {
+            \ 'pty': v:true,
             \ 'stdin': 'null',
         \ },
         \ 'vim': {
+            \ 'pty': v:true,
             \ 'in_io': 'null',
         \ },
     \ })
