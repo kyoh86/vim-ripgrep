@@ -3,13 +3,16 @@ function! ripgrep#parse#jsonl_suspected(line, stderr) abort
     try
         let l:line_object = json_decode(a:line)
     catch
+    endtry
+
+    if type(l:line_object) != v:t_dict
         if a:stderr
             call ripgrep#observe#notify('errline', a:line)
         else
             call ripgrep#observe#notify('rawline', a:line)
         endif
         return v:null
-    endtry
+    endif
 
     let l:type = get(l:line_object, 'type', '')
     if a:stderr
