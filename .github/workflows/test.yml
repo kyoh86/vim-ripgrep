@@ -1,9 +1,9 @@
-name: CI
+name: Test
 on: [push, pull_request]
 
 jobs:
   test:
-    name: Unit tests
+    name: Unit tests on Ubuntu
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
@@ -13,8 +13,41 @@ jobs:
         exclude:
           - neovim: true
             version: nightly
-
     runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup cargo
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: install ripgrep
+        run: cargo install ripgrep
+      - name: Checkout vim-themis
+        uses: actions/checkout@v2
+        with:
+          repository: thinca/vim-themis
+          path: vim-themis
+      - uses: rhysd/action-setup-vim@v1
+        id: vim
+        with:
+          version: ${{ matrix.version }}
+          neovim: ${{ matrix.neovim }}
+      - name: Run unit tests
+        env:
+          THEMIS_VIM: ${{ steps.vim.outputs.executable }}
+        run: ./vim-themis/bin/themis ./test
+
+  test-windows:
+    name: Unit tests on Windows
+    strategy:
+      matrix:
+        neovim: [true, false]
+        version: [stable, nightly]
+        # Exclude Neovim nightly since it's unstable
+        exclude:
+          - neovim: true
+            version: nightly
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Checkout vim-themis
@@ -30,31 +63,7 @@ jobs:
       - name: Run unit tests
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
-          THEMIS_PROFILE: profile.txt
-        run: ./vim-themis/bin/themis ./test
-
-  test-windows:
-    name: Unit tests on Windows
-    strategy:
-      matrix:
-        neovim: [true, false]
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Checkout vim-themis
-        uses: actions/checkout@v2
-        with:
-          repository: thinca/vim-themis
-          path: vim-themis
-      - uses: rhysd/action-setup-vim@v1
-        id: vim
-        with:
-          version: stable
-          neovim: ${{ matrix.neovim }}
-      - name: Run unit tests
-        env:
-          THEMIS_VIM: ${{ steps.vim.outputs.executable }}
-        run: ./vim-themis/bin/themis ./test/all.vimspec
+        run: ./vim-themis/bin/themis.exe ./test
 
   vint:
     name: Run vint
