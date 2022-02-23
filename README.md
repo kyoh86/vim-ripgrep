@@ -1,5 +1,7 @@
 # ripgrep.vim
 
+[![Test](https://github.com/kyoh86/vim-ripgrep/actions/workflows/test.yml/badge.svg)](https://github.com/kyoh86/vim-ripgrep/actions/workflows/test.yml)
+
 A plugin for Vim8/Neovim to search text by `ripgrep` (`rg`).
 
 # USAGE
@@ -29,3 +31,4 @@ command! -nargs=* -complete=file Ripgrep :call ripgrep#search(<q-args>)
 This software is released under the [MIT License](http://www.opensource.org/licenses/MIT), see LICENSE.
 
 - `autoload/ripgrep/job.vim` is from [async.vim](https://github.com/prabirshrestha/async.vim) and some patch.
+
