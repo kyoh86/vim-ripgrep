@@ -7,9 +7,9 @@ function! ripgrep#parse#jsonl_suspected(line, stderr) abort
 
     if type(l:line_object) != v:t_dict
         if a:stderr
-            call ripgrep#observe#notify('errline', a:line)
+            call ripgrep#observe#notify('rawerror', {'line': a:line})
         else
-            call ripgrep#observe#notify('rawline', a:line)
+            call ripgrep#observe#notify('raw', {'line': a:line})
         endif
         return v:null
     endif
@@ -40,7 +40,7 @@ function! s:process_begin(line_object) abort
     " Parse match-data from ripgrep to qf-list item.
     let l:begin = a:line_object['data']
     let l:filename = l:begin['path']['text']
-    call ripgrep#observe#notify('file', l:filename)
+    call ripgrep#observe#notify('file', {'filename': l:filename})
     return v:null
 endfunction
 

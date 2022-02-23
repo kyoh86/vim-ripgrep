@@ -40,7 +40,7 @@ function! s:finish() abort
         call setqflist([], 'a', {'title': 'Ripgrep'})
         let s:jobid = 0
     end
-    call ripgrep#observe#notify('finish')
+    call ripgrep#observe#notify('finish', {})
 endfunction
 
 function! ripgrep#__register_match(item) abort

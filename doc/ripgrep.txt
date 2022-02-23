@@ -34,58 +34,60 @@ ripgrep#search({arg})
                                         *ripgrep#observe#add_observer()*
 ripgrep#observe#add_observer({name}, {func})
     Add an observer to receive some events.
+    All events send a message to {func} with a |Dictionary| parameter.
 
     Events:
-        - `begin`
-          Indicate that "begin" entry is found from ripgrep.
-          Parameter is a path |String| searching.
+      - `begin`
+        Indicate that "begin" entry is found from ripgrep.
+        Parameter:
+          - `filename`: a path |String| searching.
 
-        - `match`
-          Indicate that "match" entry is found from ripgrep.
-          Parameter is an |Dictionary| contains matched profile like below.
->
-            {
-                \ 'filename': '', " path |String|
-                \ 'lnum': 1,      " line |Number|
-                \ 'col': 1,       " column |Number|
-                \ 'end_col': 1,   " end-col |Number|
-                \ 'text': '',     " content |String|
-            \ }
-<
-        - `other`
-          Indicate that an other entry is found from ripgrep.
-          Parameter is a |Dictionary| parsed from the json-line.
+      - `match`
+        Indicate that "match" entry is found from ripgrep.
+        Parameter:
+          - `filename`: a path |String| matched.
+          - `lnum`:     a line |Number| matched.
+          - `col`:      a column |Number| matched.
+          - `end_col`:  an end-column |Number| matched.
+          - `text`:     a content |String| matched.
 
-        - `error`
-          Indicate that a json-line is found in std-error from ripgrep.
-          Parameter is a |Dictionary| parsed from the json-line.
+      - `other`
+        Indicate that an other entry is found from ripgrep.
+        Parameter is a |Dictionary| parsed from the json-line.
 
-        - `rawline`
-          Indicate that a raw-line not unparsable from ripgrep.
-          Parameter is a raw-line |String|.
+      - `error`
+        Indicate that a json-line is found in std-error from ripgrep.
+        Parameter is a |Dictionary| parsed from the json-line.
 
-        - `errline`
-          Indicate that a raw-line not unparsable in std-error from ripgrep.
-          Parameter is a raw-line |String|.
+      - `raw`
+        Indicate that a raw-line not unparsable from ripgrep.
+        Parameter:
+          - `text`:     a raw-line |String|.
 
-        - `finish`
-          Indicate that ripgrep stopped. Parameter is none.
+      - `rawerror`
+        Indicate that a raw-line not unparsable in std-error from ripgrep.
+        Parameter:
+          - `text`:     a raw-line |String|.
+
+      - `finish`
+        Indicate that ripgrep stopped. Parameter is none.
+        Parameter is an empty |Dictionary|.
 
     Usage example:
 >
-    function! ReceiveRipgrepBegin(filename)
-        echo a:filename
+    function! ReceiveRipgrepBegin(params)
+        echo a:params['filename']
     endfunction
     call ripgrep#observer#add_observer("begin", "ReceiveRipgrepBegin")
 <
 
 >
-    function! ReceiveRipgrepMatch(item)
-        echo a:item['filename']
-        echo a:item['lnum']
-        echo a:item['col']
-        echo a:item['end_col']
-        echo a:item['text']
+    function! ReceiveRipgrepMatch(params)
+        echo a:params['filename']
+        echo a:params['lnum']
+        echo a:params['col']
+        echo a:params['end_col']
+        echo a:params['text']
     endfunction
     call ripgrep#observer#add_observer("match", "ReceiveRipgrepMatch")
 <
