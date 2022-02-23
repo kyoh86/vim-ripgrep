@@ -12,14 +12,14 @@ function s:suite.test_found()
     call setqflist([], 'r')
     call ripgrep#search('foobarbafoobarbazzfoobarbaz test') " TARGET LINE
     " TARGET COLUMN -----^
-    "                      TARGET END COLUMN-------^
+    "                      TARGET END COLUMN -------^
     call ripgrep#wait(1000)
     let l:result = getqflist()
     call s:assert.length_of(l:result, 1)
     let l:first = l:result[0]
     call s:assert.equals(l:first['lnum'], 13, "TARGET LINE")
-    call s:assert.equals(l:first['col'], 25, "TARGET COLUMN")
+    call s:assert.equals(l:first['col'], 26, "TARGET COLUMN")
     if has_key(l:first, 'end_col')
-        call s:assert.equals(l:first['end_col'], 52, "TARGET END COLUMN")
+        call s:assert.equals(l:first['end_col'], 53, "TARGET END COLUMN")
     endif
 endfunction
