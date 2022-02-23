@@ -3,14 +3,14 @@ let s:assert = themis#helper('assert')
 
 function s:suite.test_not_found()
     call setqflist([], 'r')
-    call ripgrep#search("foo\rbar\rbaz")
+    call ripgrep#search("foo\rbar\rbaz test")
     call ripgrep#wait()
     echo s:assert.length_of(getqflist(), 0)
 endfunction
 
 function s:suite.test_found()
     call setqflist([], 'r')
-    call ripgrep#search('foobarbafoobarbazzfoobarbaz') " TARGET LINE
+    call ripgrep#search('foobarbafoobarbazzfoobarbaz test') " TARGET LINE
     " TARGET COLUMN -----^
     "                      TARGET END COLUMN-------^
     call ripgrep#wait()
