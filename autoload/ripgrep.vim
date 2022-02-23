@@ -99,13 +99,12 @@ function! ripgrep#search(arg) abort
         \ 'on_stderr': function('s:stderr_handler'),
         \ 'on_exit': function('s:exit_handler'),
         \ 'normalize': 'array',
+        \ 'overlapped': v:true,
         \ 'cwd': s:cwd[0],
         \ 'nvim': {
-            \ 'pty': v:true,
             \ 'stdin': 'null',
         \ },
         \ 'vim': {
-            \ 'pty': v:true,
             \ 'in_io': 'null',
         \ },
     \ })
