@@ -1,4 +1,4 @@
-function! s:get_executable()
+function! s:get_executable() abort
     " Get rip-grep executable from global variable 
     if exists('g:ripgrep#executable')
         return g:ripgrep#executable
@@ -10,7 +10,7 @@ function! s:get_executable()
     endif
 endfunction
 
-function! s:get_base_options()
+function! s:get_base_options() abort
     " Get common command-line options for ripgrep.
     " It uses 'ignorecase' and 'smartcase' vim option.
     let l:opts = ['--json']
@@ -26,7 +26,7 @@ endfunction
 let s:found = v:false
 let s:jobid = 0
 
-function! s:reset()
+function! s:reset() abort
     " Reset (initialize) job status and quickfix-list
     let s:found = v:false
     call ripgrep#stop()
@@ -34,7 +34,7 @@ function! s:reset()
     call ripgrep#observe#add_observer('match', 'ripgrep#__register_match')
 endfunction
 
-function! s:finish()
+function! s:finish() abort
     " Finish quickfix-list
     if s:found
         call setqflist([], 'a', {'title': 'Ripgrep'})
@@ -43,7 +43,7 @@ function! s:finish()
     call ripgrep#observe#notify('finish')
 endfunction
 
-function! ripgrep#__register_match(item)
+function! ripgrep#__register_match(item) abort
     if !s:found
         copen
     endif
@@ -51,21 +51,21 @@ function! ripgrep#__register_match(item)
     call setqflist([a:item], 'a')
 endfunction
 
-function! s:stdout_handler(job_id, data, event_type)
+function! s:stdout_handler(job_id, data, event_type) abort
     " Receive lines from rg --json
     for l:line in a:data
         call ripgrep#parse#jsonl_suspected(l:line, v:false)
     endfor
 endfunction
 
-function! s:stderr_handler(job_id, data, event_type)
+function! s:stderr_handler(job_id, data, event_type) abort
     " Receive standard-error lines from rg --json
     for l:line in a:data
         call ripgrep#parse#jsonl_suspected(l:line, v:true)
     endfor
 endfunction
 
-function! s:exit_handler(job_id, data, event_type)
+function! s:exit_handler(job_id, data, event_type) abort
     let l:status = a:data
     if l:status == 0
         call s:finish()
