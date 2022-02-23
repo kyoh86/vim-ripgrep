@@ -25,7 +25,7 @@ function! s:traverse(path, rel, marks) abort
     if l:parent ==# a:path
         return v:null
     endif
-    return s:traverse(l:parent, a:rel . '../', a:marks)
+    return s:traverse(l:parent, a:rel . '..' . s:separator(), a:marks)
 endfunction
 
 " Get the directory separator.

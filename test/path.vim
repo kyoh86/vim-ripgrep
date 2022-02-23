@@ -25,16 +25,24 @@ endfunction
 
 function s:suite.test_traverse_parent()
     let l:from = s:tempname . '/parent/child'
-    let l:want = [s:tempname . '/parent', '../']
+    let l:want_0 = s:tempname . '/parent'
+    let l:want_1_pattern = '\.\.[/\\]'
     let l:got = ripgrep#path#traverse_root(l:from, ['mark'])
-    call s:assert.equals(l:got, l:want)
+    call s:assert.is_list(l:got)
+    call s:assert.length_of(l:got, 2)
+    call s:assert.equals(l:want_0, l:got[0])
+    call s:assert.match(l:got[1], l:want_1_pattern)
 endfunction
 
 function s:suite.test_traverse_second_mark()
     let l:from = s:tempname . '/ancestor/parent/child'
-    let l:want = [s:tempname . '/ancestor', '../../']
+    let l:want_0 = s:tempname . '/ancestor'
+    let l:want_1_pattern = '\.\.[/\\]\.\.[/\\]'
     let l:got = ripgrep#path#traverse_root(l:from, ['pseudo-mark', 'mark'])
-    call s:assert.equals(l:got, l:want)
+    call s:assert.is_list(l:got)
+    call s:assert.length_of(l:got, 2)
+    call s:assert.equals(l:want_0, l:got[0])
+    call s:assert.match(l:got[1], l:want_1_pattern)
 endfunction
 
 function s:suite.test_traverse_not_found()
