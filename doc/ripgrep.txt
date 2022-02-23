@@ -30,6 +30,18 @@ ripgrep#search({arg})
 <
     See `$ rg --help` for more details.
 
+                                                        *ripgrep#stop()*
+ripgrep#stop()
+
+    Stop `rg` in background process.
+
+
+                                                        *ripgrep#wait()*
+ripgrep#wait([{timeout}])
+
+    Wait `rg` in background process being finished.
+    It will be timeouted after {timeout} milli-second.
+
 
                                         *ripgrep#observe#add_observer()*
 ripgrep#observe#add_observer({name}, {func})
@@ -131,5 +143,9 @@ VARIABLE                                               *ripgrep-variable*
 *g:ripgrep#executable*
     Set a path |String| to executable "ripgrep" command.
     Default: v:null
+
+*g:ripgrep#root_marks*
+    Set mark |List| to find root-directory.
+    Default: [".git"]
 
 vim:filetype=help

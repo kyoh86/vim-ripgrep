@@ -1,8 +1,11 @@
 :Ripgrep	ripgrep.txt	/*:Ripgrep*
 g:ripgrep#executable	ripgrep.txt	/*g:ripgrep#executable*
+g:ripgrep#root_marks	ripgrep.txt	/*g:ripgrep#root_marks*
 ripgrep	ripgrep.txt	/*ripgrep*
 ripgrep#observe#add_observer()	ripgrep.txt	/*ripgrep#observe#add_observer()*
 ripgrep#search()	ripgrep.txt	/*ripgrep#search()*
+ripgrep#stop()	ripgrep.txt	/*ripgrep#stop()*
+ripgrep#wait()	ripgrep.txt	/*ripgrep#wait()*
 ripgrep-command	ripgrep.txt	/*ripgrep-command*
 ripgrep-contents	ripgrep.txt	/*ripgrep-contents*
 ripgrep-function	ripgrep.txt	/*ripgrep-function*
