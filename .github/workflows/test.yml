@@ -5,14 +5,15 @@ jobs:
   test:
     name: Unit tests on Ubuntu
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
         neovim: [true, false]
         version: [stable, nightly]
         # Exclude Neovim nightly since it's unstable
-        exclude:
-          - neovim: true
-            version: nightly
+        # exclude:
+        #   - neovim: true
+        #     version: nightly
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
