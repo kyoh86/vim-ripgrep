@@ -1,5 +1,6 @@
 function! ripgrep#parse#jsonl_suspected(line, stderr) abort
     " Parse json-line from ripgrep (with --json option) to qf-list item.
+    let l:line_object = v:null
     try
         let l:line_object = json_decode(a:line)
     catch
