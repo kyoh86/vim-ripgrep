@@ -1,53 +1,66 @@
-name: 'Test'
-on: ['push', 'pull_request']
+name: CI
+on: [push, pull_request]
 
 jobs:
   test:
-    name: 'Vim ${{ matrix.vim_version }} on ${{ matrix.platform }}'
+    name: Unit tests
     strategy:
       matrix:
-        vim_version:
-          - 'head'
-          - 'v8.2.0000'
-          - 'v8.1.0001'
-          - 'v8.0.0001'
-          - 'v7.4'
-        platform: ['Linux', 'MacOS', 'Windows']
-
-        include:
-          - platform: 'Linux'
-            os: 'ubuntu-latest'
-            download: 'never'
-          - platform: 'MacOS'
-            os: 'macos-latest'
-            download: 'never'
-          - platform: 'Windows'
-            os: 'windows-latest'
-            download: 'always'
-
+        os: [macos-latest, ubuntu-latest]
+        neovim: [true, false]
+        version: [stable, nightly]
+        # Exclude Neovim nightly since it's unstable
         exclude:
-          - vim_version: 'v7.4'
-            platform: 'MacOS'
+          - neovim: true
+            version: nightly
 
-      fail-fast: false
-
-    runs-on: '${{ matrix.os }}'
-    timeout-minutes: 10
-
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: 'actions/checkout@v2'
-      - name: 'Setup Vim'
-        id: 'vim'
-        uses: 'thinca/action-setup-vim@v1'
+      - uses: actions/checkout@v2
+      - name: Checkout vim-themis
+        uses: actions/checkout@v2
         with:
-          vim_version: '${{ matrix.vim_version }}'
-          download: '${{ matrix.download }}'
-      - name: 'Show Vim version'
-        run: |
-          ${{ steps.vim.outputs.executable }} --version
-      - name: 'Run test'
+          repository: thinca/vim-themis
+          path: vim-themis
+      - uses: rhysd/action-setup-vim@v1
+        id: vim
+        with:
+          version: ${{ matrix.version }}
+          neovim: ${{ matrix.neovim }}
+      - name: Run unit tests
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
-        run: |
-          ./bin/themis --reporter dot
+          THEMIS_PROFILE: profile.txt
+        run: ./vim-themis/bin/themis ./test
 
+  test-windows:
+    name: Unit tests on Windows
+    strategy:
+      matrix:
+        neovim: [true, false]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout vim-themis
+        uses: actions/checkout@v2
+        with:
+          repository: thinca/vim-themis
+          path: vim-themis
+      - uses: rhysd/action-setup-vim@v1
+        id: vim
+        with:
+          version: stable
+          neovim: ${{ matrix.neovim }}
+      - name: Run unit tests
+        env:
+          THEMIS_VIM: ${{ steps.vim.outputs.executable }}
+        run: ./vim-themis/bin/themis ./test/all.vimspec
+
+  vint:
+    name: Run vint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - run: pip install vim-vint
+      - run: vint --warning --verbose --enable-neovim ./autoload ./plugin
