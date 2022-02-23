@@ -3,9 +3,9 @@ let s:assert = themis#helper('assert')
 
 function s:suite.test_not_found()
     call setqflist([], 'r')
-    call ripgrep#search("foo\rbar\rbaz test")
+    call ripgrep#search("foo" . "bar" . "baz" . "pseudo" . "never" . "found")
     call ripgrep#wait(1000)
-    echo s:assert.length_of(getqflist(), 0)
+    echo s:assert.length_of(getqflist(), 0, 'quickfix list is empty')
 endfunction
 
 function s:suite.test_found()
@@ -15,7 +15,7 @@ function s:suite.test_found()
     "                      TARGET END COLUMN -------^
     call ripgrep#wait(1000)
     let l:result = getqflist()
-    call s:assert.length_of(l:result, 1)
+    call s:assert.length_of(l:result, 1, 'has 1 item in quickfix list')
     let l:first = l:result[0]
     call s:assert.equals(l:first['lnum'], 13, "TARGET LINE")
     call s:assert.equals(l:first['col'], 26, "TARGET COLUMN")
