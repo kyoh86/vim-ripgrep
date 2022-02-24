@@ -36,9 +36,31 @@ function! s:suite.match_line()
     call s:assert.equals(l:want, l:got)
 endfunction
 
+function! s:suite.match_binary()
+    " base64: 'Zml6eg==' => text: 'fizz'
+    let l:from = '{"type":"match","data":{"path":{"text":"test-filename"},"lines":{"bytes":"Zml6eg=="},"line_number":2,"submatches":[{"start":3,"end":4}]}}'
+    let l:want = [g:ripgrep#event#match, {'filename': 'test-filename', 'text': 'fizz', 'lnum': 2, 'col': 4, 'end_col': 5}]
+    let l:got = ripgrep#line#parse(l:from)
+    call s:assert.equals(l:want, l:got)
+endfunction
+
 function! s:suite.other_line()
     let l:from = '{"foo":"bar","bar":17}'
     let l:want = [g:ripgrep#event#other, {'foo': 'bar', 'bar': 17}]
     let l:got = ripgrep#line#parse(l:from)
     call s:assert.equals(l:want, l:got)
+endfunction
+
+function! s:suite.decode_base64_foo()
+    let l:from = 'Zm9v'
+    let l:want = 'foo'
+    let l:got = ripgrep#line#decode_base64(l:from)
+    call s:assert.equals(l:got, l:want)
+endfunction
+
+function! s:suite.decode_base64_fizz()
+    let l:from = 'Zml6eg=='
+    let l:want = 'fizz'
+    let l:got = ripgrep#line#decode_base64(l:from)
+    call s:assert.equals(l:got, l:want)
 endfunction
