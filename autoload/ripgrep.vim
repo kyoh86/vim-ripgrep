@@ -95,9 +95,9 @@ function! ripgrep#search(arg) abort
     call add(l:cmds, a:arg)
     call s:reset()
     let l:pty = v:true
-    if has('win32') && has('nvim')
-        let l:pty = v:false
-    endif
+    " if has('win32') && has('nvim')
+    "     let l:pty = v:false
+    " endif
     let s:cwd = ripgrep#path#traverse_root(getcwd(), s:get_root_marks())
     let s:jobid = ripgrep#job#start(join(l:cmds, ' '), {
         \ 'on_stdout': function('s:stdout_handler'),
