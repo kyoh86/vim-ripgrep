@@ -33,7 +33,13 @@ jobs:
       - name: Run unit tests
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
+          THEMIS_PROFILE: profile.txt
         run: ./vim-themis/bin/themis ./test
+      - uses: codecov/codecov-action@v2
+        with:
+          files: profile.txt
+          fail_ci_if_error: true
+          verbose: true
 
   test-windows:
     name: Unit tests on Windows
@@ -68,7 +74,13 @@ jobs:
       - name: Run unit tests
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
+          THEMIS_PROFILE: profile.txt
         run: ./vim-themis/bin/themis ./test
+      - uses: codecov/codecov-action@v2
+        with:
+          files: profile.txt
+          fail_ci_if_error: true
+          verbose: true
 
   vint:
     name: Run vint
