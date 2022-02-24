@@ -28,8 +28,7 @@ let s:tempname = tempname()
 
 function s:suite.before()
     call mkdir(s:tempname, 'p')
-    call system('echo ' . "'" . '{"type":"match","data":{"path":{"text":"test/e2e-test.vim"},"lines":{"text":"pseudo"},"line_number":11,"submatches":[{"start":13,"end":17}]}}' . "' > " . s:tempname . '/cat1.txt')
-    call system('echo ' . "'" . '{"type":"match","data":{"path":{"text":"test/e2e-test.vim"},"lines":{"text":"pseudo"},"line_number":19,"submatches":[{"start":23,"end":29}]}}' . "' > " . s:tempname . '/cat2.txt')
+    call system('echo ' . "'" . '{"type":"match","data":{"path":{"text":"test/e2e-test.vim"},"lines":{"text":"pseudo"},"line_number":11,"submatches":[{"start":13,"end":17}]}}' . "' > " . s:tempname . '/cat.txt')
 endfunction
 
 function s:suite.after()
@@ -37,17 +36,16 @@ function s:suite.after()
 endfunction
 
 function s:suite.parallelly()
+    let l:exec = []
+    let l:count = 1
+    while l:count < 100
+        call add(l:exec, 'cat ' . s:tempname . '/cat.txt')
+        let l:count = l:count + 1
+    endwhile
     let g:ripgrep#executable =
-                \ 'unbuffer bash -c "sleep 1 && cat ' . s:tempname . '/cat1.txt && sleep 1 && cat ' . s:tempname . '/cat2.txt'
+                \ 'bash -c "sleep 1 && ' . join(l:exec, " && ") . ' && sleep 1 && cat ' . s:tempname . '/cat.txt"'
     call setqflist([], 'r')
     call ripgrep#search('pseudo')
     call ripgrep#wait(1500)
-    let l:result = getqflist()
-    call s:assert.length_of(l:result, 1, 'has 1 item in quickfix list')
-    let l:first = l:result[0]
-    call s:assert.equals(l:first['lnum'], 11)
-    call s:assert.equals(l:first['col'], 14)
-    if has_key(l:first, 'end_col')
-        call s:assert.equals(l:first['end_col'], 18, "TARGET END COLUMN")
-    endif
+    call s:assert.not_equals(0, len(getqflist()), 'has any items in quickfix list')
 endfunction
