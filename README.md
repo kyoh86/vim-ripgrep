@@ -4,6 +4,9 @@
 
 A plugin for Vim8/Neovim to search text by `ripgrep` (`rg`).
 
+**THIS IS EXPERIMENTAL PLUGIN AND UNDER DEVELOPMENT.**
+**DESTRUCTIVE CHANGES MAY OCCUR.**
+
 ## What's different from [`jremmen/vim-ripgrep`](https://github.com/jremmen/vim-ripgrep)?
 
 - Calling `ripgrep` asynchronously.
