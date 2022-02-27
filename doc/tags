@@ -2,6 +2,7 @@
 g:ripgrep#executable	ripgrep.txt	/*g:ripgrep#executable*
 g:ripgrep#root_marks	ripgrep.txt	/*g:ripgrep#root_marks*
 ripgrep	ripgrep.txt	/*ripgrep*
+ripgrep#call()	ripgrep.txt	/*ripgrep#call()*
 ripgrep#observe#add_observer()	ripgrep.txt	/*ripgrep#observe#add_observer()*
 ripgrep#search()	ripgrep.txt	/*ripgrep#search()*
 ripgrep#stop()	ripgrep.txt	/*ripgrep#stop()*
