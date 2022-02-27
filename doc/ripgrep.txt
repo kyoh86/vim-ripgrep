@@ -1,5 +1,8 @@
 *ripgrep.txt*                           A plugin to search text by ripgrep
 
+THIS IS EXPERIMENTAL PLUGIN AND UNDER DEVELOPMENT.
+DESTRUCTIVE CHANGES MAY OCCUR.
+
 Author: kyoh86 <me@kyoh86.dev>
 License: MIT license
 
@@ -29,6 +32,21 @@ ripgrep#search({arg})
     call ripgrep#search('-w --igore-case foo')
 <
     See `$ rg --help` for more details.
+
+                                                        *ripgrep#call()*
+ripgrep#call({cmd}, {cwd}, {rel})
+
+    Call ripgrep with the specified cmd, cwd.
+    - {cmd} is command-line |String| to call the ripgrep.
+    - {cwd} is a path |String| of the working-directory to execute {cmd}.
+    - {rel} is prefix |String| for filenames in the results.
+
+    Example: >
+    cd /tmp/foo/bar/baz
+    call ripgrep#call('rg --json -w --igore-case foo', '/tmp/foo', '../../')
+<
+    Warning: You must pass a command-line calling ripgrep with the `--json`
+    option.
 
                                                         *ripgrep#stop()*
 ripgrep#stop()
