@@ -34,7 +34,7 @@ For example:
 
 ```vim
 Plug "kyoh86/vim-ripgrep",
-command! -nargs=* -complete=file Ripgrep :call ripgrep#search(<q-args>)
+command! -complete=file Ripgrep :call ripgrep#search(<q-args>)
 ```
 
 # LICENSE

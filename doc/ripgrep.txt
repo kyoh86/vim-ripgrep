@@ -142,7 +142,7 @@ If you want call any functions from command, you can define them like below.
 
     Setting:
     >
-        command! -nargs=* -complete=file Ripgrep :call ripgrep#search(<q-args>)
+        command! -complete=file Ripgrep :call ripgrep#search(<q-args>)
 <
 
     Search keyword from current working directory by ripgrep (`rg`) command.
