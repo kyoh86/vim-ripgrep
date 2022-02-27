@@ -34,12 +34,12 @@ ripgrep#search({arg})
     See `$ rg --help` for more details.
 
                                                         *ripgrep#call()*
-ripgrep#call({cmd}, {cwd}, {result_path_prefix})
+ripgrep#call({cmd}, {cwd}, {rel})
 
     Call ripgrep with the specified cmd, cwd.
     - {cmd} is command-line |String| to call the ripgrep.
     - {cwd} is a path |String| of the working-directory to execute {cmd}.
-    - {result_path_prefix} is prefix |String| for filenames in the results.
+    - {rel} is prefix |String| for filenames in the results.
 
     Example: >
     cd /tmp/foo/bar/baz

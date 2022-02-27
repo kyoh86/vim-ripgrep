@@ -107,7 +107,7 @@ function! ripgrep#search(arg) abort
     call ripgrep#call(l:cmd, l:cwd[0], l:cwd[1])
 endfunction
 
-function! ripgrep#call(cmd, cwd, result_path_prefix) abort
+function! ripgrep#call(cmd, cwd, rel) abort
     call s:reset()
 
     let l:pty = v:true
@@ -115,7 +115,7 @@ function! ripgrep#call(cmd, cwd, result_path_prefix) abort
         let l:pty = v:false
     endif
     let s:jobid = ripgrep#job#start(a:cmd, {
-        \ 'on_stdout': s:get_stdout_handler(a:result_path_prefix),
+        \ 'on_stdout': s:get_stdout_handler(a:rel),
         \ 'on_stderr': function('s:stderr_handler'),
         \ 'on_exit': function('s:exit_handler'),
         \ 'normalize': 'array',
