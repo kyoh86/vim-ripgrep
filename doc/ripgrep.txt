@@ -29,7 +29,7 @@ ripgrep#search({arg})
     Search keyword from current working directory by ripgrep (`rg`) command.
     {arg} is |String| may be pass for the ripgrep like below:
 >
-    call ripgrep#search('-w --igore-case foo')
+    call ripgrep#search('-w --ignore-case foo')
 <
     See `$ rg --help` for more details.
 
@@ -43,7 +43,7 @@ ripgrep#call({cmd}, {cwd}, {rel})
 
     Example: >
     cd /tmp/foo/bar/baz
-    call ripgrep#call('rg --json -w --igore-case foo', '/tmp/foo', '../../')
+    call ripgrep#call('rg --json -w --ignore-case foo', '/tmp/foo', '../../')
 <
     Warning: You must pass a command-line calling ripgrep with the `--json`
     option.
