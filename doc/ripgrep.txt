@@ -112,7 +112,7 @@ ripgrep#observe#add_observer({name}, {func})
     function! ReceiveRipgrepBegin(params)
         echo a:params['filename']
     endfunction
-    call ripgrep#observer#add_observer(
+    call ripgrep#observe#add_observer(
         \ ripgrep#event#file_begin,
         \ "ReceiveRipgrepBegin"
     \ )
@@ -126,7 +126,7 @@ ripgrep#observe#add_observer({name}, {func})
         echo a:params['end_col']
         echo a:params['text']
     endfunction
-    call ripgrep#observer#add_observer(
+    call ripgrep#observe#add_observer(
         \ ripgrep#event#match,
         \ "ReceiveRipgrepMatch"
     \ )
