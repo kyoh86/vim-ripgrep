@@ -64,6 +64,7 @@ function! s:process_match(line_object) abort
     if l:linetext is v:null
         return [g:ripgrep#event#other, a:line_object]
     end
+    let l:linetext = trim(l:linetext, "\n", 2)
     return [
         \ g:ripgrep#event#match, {
             \ 'filename': l:filename,

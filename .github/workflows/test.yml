@@ -13,7 +13,7 @@ jobs:
         version: [stable, nightly]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup cargo
         uses: actions-rs/toolchain@v1
         with:
@@ -21,7 +21,7 @@ jobs:
       - name: install ripgrep
         run: cargo install ripgrep
       - name: Checkout vim-themis
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: thinca/vim-themis
           path: vim-themis
@@ -48,7 +48,7 @@ jobs:
             version: stable
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup cargo
         uses: actions-rs/toolchain@v1
         with:
@@ -56,7 +56,7 @@ jobs:
       - name: install ripgrep
         run: cargo install ripgrep
       - name: Checkout vim-themis
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: thinca/vim-themis
           path: vim-themis
@@ -75,7 +75,7 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v1
       - run: pip install vim-vint
       - run: vint --warning --verbose --enable-neovim ./autoload
