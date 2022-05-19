@@ -158,6 +158,7 @@ function! s:job_start(cmd, opts) abort
             let l:jobopt['on_stdout'] = has_key(a:opts, 'on_stdout') ? function('s:on_stdout') : function('s:noop')
             let l:jobopt['on_stderr'] = has_key(a:opts, 'on_stderr') ? function('s:on_stderr') : function('s:noop')
         endif
+        let l:jobopt['stdin'] = 'null'
         call extend(l:jobopt, { 'on_exit': function('s:on_exit') })
         let l:job = jobstart(a:cmd, l:jobopt)
         if l:job <= 0
@@ -179,6 +180,7 @@ function! s:job_start(cmd, opts) abort
             let l:jobopt['out_cb'] = has_key(a:opts, 'on_stdout') ? function('s:out_cb', [l:jobid, a:opts]) : function('s:noop')
             let l:jobopt['err_cb'] = has_key(a:opts, 'on_stderr') ? function('s:err_cb', [l:jobid, a:opts]) : function('s:noop')
         endif
+        let l:jobopt['stdin'] = 'null'
         call extend(l:jobopt, {
             \ 'exit_cb': function('s:exit_cb', [l:jobid, a:opts]),
             \ 'mode': 'raw',

@@ -24,11 +24,12 @@ function! s:get_base_options() abort
     " It uses 'ignorecase' and 'smartcase' vim option.
     let l:opts = ['--json', '--no-line-buffered', '--no-block-buffered']
     if &ignorecase == 1
-        call insert(l:opts, '--ignore-case')
+        call add(l:opts, '--ignore-case')
     endif
     if &smartcase == 1
-        call insert(l:opts, '--smart-case')
+        call add(l:opts, '--smart-case')
     endif
+    call add(l:opts, '--')
     return l:opts
 endfunction
 
