@@ -2,7 +2,11 @@
 "
 " Functions to process output lines from rg --json
 
+let s:remain = ''
+
 function! ripgrep#line#parse(line) abort
+    let l:line = s:remain .. a:line
+
     " Parse json-line from ripgrep (with --json option) to qf-list item.
     let l:line_object = v:null
     try
@@ -11,7 +15,10 @@ function! ripgrep#line#parse(line) abort
     endtry
 
     if type(l:line_object) != v:t_dict
+        let s:remain = l:line
         return [g:ripgrep#event#raw, {'raw': a:line}]
+    else
+        let s:remain = ''
     endif
 
     let l:type = get(l:line_object, 'type', '')

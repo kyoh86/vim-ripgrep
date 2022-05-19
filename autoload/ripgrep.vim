@@ -22,7 +22,7 @@ endfunction
 function! s:get_base_options() abort
     " Get common command-line options for ripgrep.
     " It uses 'ignorecase' and 'smartcase' vim option.
-    let l:opts = ['--json']
+    let l:opts = ['--json', '--no-line-buffered', '--no-block-buffered']
     if &ignorecase == 1
         call insert(l:opts, '--ignore-case')
     endif
@@ -110,10 +110,6 @@ endfunction
 function! ripgrep#call(cmd, cwd, rel) abort
     call s:reset()
 
-    let l:pty = v:true
-    if has('win32') && has('nvim')
-        let l:pty = v:false
-    endif
     let s:jobid = ripgrep#job#start(a:cmd, {
         \ 'on_stdout': s:get_stdout_handler(a:rel),
         \ 'on_stderr': function('s:stderr_handler'),
@@ -121,14 +117,6 @@ function! ripgrep#call(cmd, cwd, rel) abort
         \ 'normalize': 'array',
         \ 'overlapped': v:true,
         \ 'cwd': a:cwd,
-        \ 'nvim': {
-            \ 'pty': l:pty,
-            \ 'stdin': 'null',
-        \ },
-        \ 'vim': {
-            \ 'pty': l:pty,
-            \ 'in_io': 'null',
-        \ },
     \ })
     if s:jobid <= 0
         echoerr 'failed to be call ripgrep'
