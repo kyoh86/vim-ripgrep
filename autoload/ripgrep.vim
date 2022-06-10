@@ -29,7 +29,6 @@ function! s:get_base_options() abort
     if &smartcase == 1
         call add(l:opts, '--smart-case')
     endif
-    call add(l:opts, '--')
     return l:opts
 endfunction
 
