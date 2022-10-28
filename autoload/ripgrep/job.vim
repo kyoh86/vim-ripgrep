@@ -180,7 +180,7 @@ function! s:job_start(cmd, opts) abort
             let l:jobopt['out_cb'] = has_key(a:opts, 'on_stdout') ? function('s:out_cb', [l:jobid, a:opts]) : function('s:noop')
             let l:jobopt['err_cb'] = has_key(a:opts, 'on_stderr') ? function('s:err_cb', [l:jobid, a:opts]) : function('s:noop')
         endif
-        let l:jobopt['stdin'] = 'null'
+        let l:jobopt['in_io'] = 'null'
         call extend(l:jobopt, {
             \ 'exit_cb': function('s:exit_cb', [l:jobid, a:opts]),
             \ 'mode': 'raw',
