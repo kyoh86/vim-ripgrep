@@ -51,10 +51,14 @@ function! ripgrep#__register_match(item) abort
     call setqflist([a:item], 'a')
 endfunction
 
-function! s:finish(status) abort
+function! s:finish(arg, status) abort
     " Finish quickfix-list
     if s:found
-        call setqflist([], 'a', {'title': 'Ripgrep'})
+        let l:title = 'Ripgrep'
+        if a:arg !=# ''
+            let l:title = l:title . ' ' . a:arg
+        endif
+        call setqflist([], 'a', {'title': l:title})
         let s:jobid = 0
     end
     call ripgrep#observe#notify(g:ripgrep#event#finish, {'status': a:status})
@@ -84,36 +88,25 @@ function! s:stderr_handler(job_id, data, event_type) abort
     endfor
 endfunction
 
-function! s:exit_handler(job_id, data, event_type) abort
+function! s:exit_handler(arg, job_id, data, event_type) abort
     let l:status = a:data
-    call s:finish(l:status)
+    call s:finish(a:arg, l:status)
     if l:status != 0
         echomsg 'failed to find'
     endif
 endfunction
 
-function! ripgrep#search(arg) abort
-    let l:exe = s:get_executable()
-    if !executable(l:exe)
-        echoerr "There's no executable: " . l:exe
+function! s:call(cmd, arg, cwd, rel) abort
+    let l:cmd = a:cmd
+    if a:arg !=# ''
+        let l:cmd = l:cmd . ' ' . a:arg
     endif
-    let l:cmds = [l:exe]
-    call extend(l:cmds, s:get_base_options())
-    call add(l:cmds, a:arg)
-    " get cwd (tuple of [path, rel])
-    let l:cwd = ripgrep#path#traverse_root(getcwd(), s:get_root_marks())
-
-    let l:cmd = join(l:cmds, ' ')
-    call ripgrep#call(l:cmd, l:cwd[0], l:cwd[1])
-endfunction
-
-function! ripgrep#call(cmd, cwd, rel) abort
     call s:reset()
 
-    let s:jobid = ripgrep#job#start(a:cmd, {
+    let s:jobid = ripgrep#job#start(l:cmd, {
         \ 'on_stdout': s:get_stdout_handler(a:rel),
         \ 'on_stderr': function('s:stderr_handler'),
-        \ 'on_exit': function('s:exit_handler'),
+        \ 'on_exit': function('s:exit_handler', [a:arg]),
         \ 'normalize': 'array',
         \ 'overlapped': v:true,
         \ 'cwd': a:cwd,
@@ -121,6 +114,26 @@ function! ripgrep#call(cmd, cwd, rel) abort
     if s:jobid <= 0
         echoerr 'failed to be call ripgrep'
     endif
+endfunction
+
+function! ripgrep#search(arg) abort
+    " get cwd (tuple of [path, rel])
+    let l:cwd = ripgrep#path#traverse_root(getcwd(), s:get_root_marks())
+
+    " get base command
+    let l:exe = s:get_executable()
+    if !executable(l:exe)
+        echoerr "There's no executable: " . l:exe
+    endif
+    let l:cmds = [l:exe]
+    call extend(l:cmds, s:get_base_options())
+
+    let l:cmd = join(l:cmds, ' ')
+    call s:call(l:cmd, a:arg, l:cwd[0], l:cwd[1])
+endfunction
+
+function! ripgrep#call(cmd, cwd, rel) abort
+    call s:call(a:cmd, '', a:cwd, a:rel)
 endfunction
 
 function! ripgrep#stop() abort
