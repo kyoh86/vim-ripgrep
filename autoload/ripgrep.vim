@@ -71,7 +71,7 @@ function! s:stdout_handler_core(rel, job_id, data, event_type) abort
         let l:event = l:handler[0]
         let l:body = l:handler[1]
         if has_key(l:body, 'filename')
-            let l:body['filename'] = ripgrep#path#rel(a:rel . l:body['filename'])
+            let l:body['filename'] = a:rel . l:body['filename']
         endif
         call ripgrep#observe#notify(l:event, l:body)
     endfor
