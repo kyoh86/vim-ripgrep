@@ -39,7 +39,7 @@ function! s:reset() abort
     " Reset (initialize) job status and quickfix-list
     let s:found = v:false
     call ripgrep#stop()
-    call setqflist([], 'r')
+    call setqflist([], ' ')
     call ripgrep#observe#add_observer(g:ripgrep#event#match, 'ripgrep#__register_match')
 endfunction
 
